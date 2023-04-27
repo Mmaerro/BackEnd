@@ -3,8 +3,7 @@ import { CartManager } from "../CartManager.js";
 
 const cartManager = new CartManager("./cart.txt");
 
-const cartRouter = Router(); //cartRouter va a ser la implementacion de router
-
+const cartRouter = Router(); 
 cartRouter.post("/", async (req, res) => {
   await cartManager.createCarrito();
   res.send("Carrito creado");

@@ -3,7 +3,7 @@ import { ProductManager } from "../ProductManager.js";
 
 const productManager = new ProductManager("./productos.txt");
 
-const productRouter = Router(); //productRouter va a ser la implementacion de router
+const productRouter = Router();
 
 productRouter.get("/", async (req, res) => {
   let { limit } = req.query;
@@ -43,14 +43,16 @@ productRouter.post("/", async (req, res) => {
 
 productRouter.put("/:id", async (req, res) => {
   const id = req.params.id;
-  const {    title,
+  const {
+    title,
     description,
     code,
     price,
     status,
     stock,
     category,
-    thumbnails, } = req.body;
+    thumbnails,
+  } = req.body;
   const mensaje = await productManager.updateProduct(id, {
     title,
     description,

@@ -18,9 +18,9 @@ const storage = multer.diskStorage({
 });
 
 //*Middleware
-app.use(express.json()); //Permite ejecutar JSON en mi app
-app.use(express.urlencoded({ extended: true })); //Permite poder realizar consultas en la URL (req.query)
-const upload = multer({ storage: storage }); //Instancio un objeto con la configuracion de multer presentada
+app.use(express.json());
+app.use(express.urlencoded({ extended: true })); //
+const upload = multer({ storage: storage }); //
 
 //*Routes
 app.use("/api/product", productRouter);

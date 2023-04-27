@@ -72,38 +72,3 @@ export class ProductManager {
     }
   }
 }
-
-// const prod1 = new Product(
-//   "Arroz",
-//   "Arroz grano medio",
-//   90,
-//   "sin imagen",
-//   "no se",
-//   25
-// );
-// const prod2 = new Product(
-//   "Fideos",
-//   "Fideos Moñita",
-//   60,
-//   "sin imagen2",
-//   "fideo",
-//   15
-// );
-// const prod3 = new Product(
-//   "Azucar",
-//   "Azucar Rubia",
-//   100,
-//   "sin imagen2",
-//   "rubia",
-//   35
-// );
-// const prod4 = new Product(
-//   "Azucar",
-//   "Azucar morena",
-//   50,
-//   "sin imagen2",
-//   "morena",
-//   5
-// );
-
-// prod.getProducts().then((prod) => console.log(prod));
