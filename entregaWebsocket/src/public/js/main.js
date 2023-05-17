@@ -2,16 +2,9 @@ const socket = io();
 
 const formProduct = document.getElementById("formProducto");
 const listar = document.getElementById("listar");
+const error = document.getElementById("error");
+error.style.display = "none";
 
-function validarForm(form) {
-  for (let campo in form) {
-    if (form[campo].value === "") {
-      return false;
-    } else {
-      return true;
-    }
-  }
-}
 formProduct.addEventListener("submit", (e) => {
   e.preventDefault();
 
@@ -22,13 +15,23 @@ formProduct.addEventListener("submit", (e) => {
   const camposValidos = validarForm(formProduct);
   if (camposValidos) {
     socket.emit("nuevoProducto", prods);
-    console.log("¡Formulario válido!");
     formProduct.reset();
   } else {
-    console.log("Por favor, completa todos los campos del formulario.");
+    error.style.display = "block";
+    setInterval(function () {
+      error.style.display = "none";
+    }, 2000);
   }
 });
-
+function validarForm(form) {
+  for (let campo in form) {
+    if (form[campo].value === "") {
+      return false;
+    } else {
+      return true;
+    }
+  }
+}
 socket.on("listado", (arrayProds) => {
   console.log(arrayProds);
   listar.innerHTML = ""; //Para evitar duplicados

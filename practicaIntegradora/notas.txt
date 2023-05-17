@@ -1,0 +1,5 @@
+await userModel.create([
+    { first_name: "Emily", last_name: "Esmeralda", email: "emily@emily.com", gender: "F", password: "1234" },
+    { first_name: "Eduardo", last_name: "Ediaz", email: "edu@edu.com", gender: "M", password: "5678" },
+    { first_name: "Aldana", last_name: "Alvarez", email: "a@a.com", gender: "F", password: "8965" }
+])
