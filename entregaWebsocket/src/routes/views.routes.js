@@ -15,6 +15,9 @@ viewsRouter.get("/realtimeproducts", async (req, res) => {
       const productss = await productManager.getProducts();
       req.io.emit("listado", productss);
     });
+    socket.on("EliminarProds", async (id) => {
+      await productManager.deleteProduct(id);
+    });
   });
 
   res.render("realtimeproducts", { products });

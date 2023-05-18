@@ -16,19 +16,21 @@
 
   <button type="submit">Crear Producto</button>
 </form>
-<div id="error">
-  <p>Por favor rellena el formulario !!</p>
-</div>
+<div id="error" style="display: none; color: red;">Por favor, completa todos los campos</div>
 <h1>Todos los productos</h1>
 <div id="listar">
   {{#each products}}
-    <dl>
-      <dt><b>{{this.title}}</b></dt>
-      <dd><b>Descripcion:</b> {{this.description}}</dd>
-      <dd><b>Precio:</b> {{this.price}}</dd>
-      <dd><b>Stock:</b> {{this.stock}}</dd>
-      <dd><b>Category:</b> {{this.category}}</dd>
-    </dl>
+    <form class="form">
+      <dl>
+        <dt><b>{{this.title}}</b></dt>
+        <dd><b>Descripcion:</b> {{this.description}}</dd>
+        <dd><b>Precio:</b> {{this.price}}</dd>
+        <dd><b>Stock:</b> {{this.stock}}</dd>
+        <dd><b>Category:</b> {{this.category}}</dd>
+      </dl>
+      <input type="text" value="{{this.id}}" style="display: none;" />
+      <input type="submit" value="Eliminar" />
+    </form>
   {{/each}}
 
 </div>

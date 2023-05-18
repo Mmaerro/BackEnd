@@ -1,17 +1,16 @@
-//*importaciones
+import "dotenv/config";
 import express, { json } from "express";
-import productRouter from "./routes/product.routes.js";
+import mongoose from "mongoose";
 import viewsRouter from "./routes/views.routes.js";
-import cartRouter from "./routes/cart.routes.js";
 import { __dirname, __filename } from "./path.js";
 import { engine } from "express-handlebars";
 import multer from "multer";
 import * as path from "path";
 import { Server } from "socket.io";
 
-//*Configuraciones
+//*routes
+
 const app = express();
-const PORT = 8080;
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "src/public/img");
@@ -19,11 +18,6 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     cb(null, `${file.originalname}`);
   },
-});
-
-//*ejecutar el server
-const server = app.listen(PORT, () => {
-  console.log(`Server On PORT ${PORT}`);
 });
 
 app.engine("handlebars", engine());
@@ -59,7 +53,12 @@ app.post("/api/upload", upload.single("product"), (req, res) => {
   res.send("Imagen subida");
 });
 
-//*HBS
-app.get("/api", (req, res) => {
-  res.render("index");
+//CONECTAR CON LA BASE DE DATOS a traves de mongoose
+mongoose
+  .connect(process.env.URL_MONGODB_ATLAS)
+  .then(() => console.log("DB is connected"))
+  .catch((err) => console.log("Error en MongoDB Atlas: ", err));
+
+app.listen(process.env.PORT, () => {
+  console.log("Server on port", process.env.PORT);
 });

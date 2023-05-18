@@ -1,8 +1,8 @@
 //*importaciones
-import express, { json } from "express";
-import productRouter from "./routes/product.routes.js";
-import viewsRouter from "./routes/views.routes.js";
 import cartRouter from "./routes/cart.routes.js";
+import productRouter from "./routes/product.routes.js";
+import express, { json } from "express";
+import viewsRouter from "./routes/views.routes.js";
 import { __dirname, __filename } from "./path.js";
 import { engine } from "express-handlebars";
 import multer from "multer";

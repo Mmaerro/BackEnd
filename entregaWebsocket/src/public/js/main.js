@@ -32,17 +32,37 @@ function validarForm(form) {
     }
   }
 }
+
+const forms = document.querySelectorAll(".form");
+
+for (let i = 0; i < forms.length; i++) {
+  forms[i].addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const hiddenInput = forms[i].querySelector(
+      "input[type='text'][style='display: none;']"
+    ); // Obtén el campo de entrada oculto
+    const id = hiddenInput.value; // Obtén el valor del campo de entrada
+    console.log(id);
+    socket.emit("EliminarProds", id);
+    e.target.remove();
+  });
+}
+
 socket.on("listado", (arrayProds) => {
-  console.log(arrayProds);
   listar.innerHTML = ""; //Para evitar duplicados
   arrayProds.forEach((prods) => {
-    console.log(prods.title);
-    listar.innerHTML += `<dl>
+    listar.innerHTML += `
+    <form class="form">
+    <dl>
     <dt><b>${prods.title}</b></dt>
     <dd><b>Descripcion:</b> ${prods.description}</dd>
     <dd><b>Precio:</b> ${prods.price}</dd>
     <dd><b>Stock:</b> ${prods.stock}</dd>
     <dd><b>Category:</b> ${prods.category}</dd>
-  </dl>`;
+  </dl>
+  <input type="text" value="${this.id}" style="display: none;" />
+  <input type="submit" value="Eliminar" />
+</form>`;
   });
 });
