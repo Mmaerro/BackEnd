@@ -1,14 +1,14 @@
-import { Schema, model, Types } from "mongoose";
-//generar modelo de carrito
+import { Schema, model } from "mongoose";
+
 const messageSchema = new Schema({
-    user: {
-        type: String,
-        required: true,
-    },
-    message: {
-        type: String,
-        required: true,
-    },
+  user: {
+    type: String,
+    required: true,
+  },
+  message: {
+    type: String,
+    required: true,
+  },
 });
 
-export default messageModel = model(messageSchema, "messages");
+export const messageModel = model("messages", messageSchema);

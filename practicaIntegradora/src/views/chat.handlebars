@@ -7,3 +7,11 @@
 <div>
   <p id="parrafosMensajes"></p>
 </div>
+{{#if message}}
+  {{message}}
+{{else}}
+  No hay mensaje disponible
+{{/if}}
+{{#each mensage}}
+  <p>{{this}}</p>
+{{/each}}

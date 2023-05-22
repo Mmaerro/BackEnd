@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { ProductManager } from "../ProductManager.js";
+import { messageModel } from "../models/Messages.js";
 
 const productManager = new ProductManager("./productos.txt");
 
@@ -18,6 +19,15 @@ viewsRouter.get("/realtimeproducts", async (req, res) => {
   });
 
   res.render("realtimeproducts", { products });
+});
+
+viewsRouter.get("/chat", async (req, res) => {
+  const mensage = await messageModel.find();
+
+  mensage.forEach((element) => {
+    console.log(element.message);
+  });
+  res.render("chat", { mensage });
 });
 
 viewsRouter.get("/home", async (req, res) => {

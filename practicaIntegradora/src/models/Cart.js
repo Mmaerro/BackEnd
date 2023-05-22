@@ -1,17 +1,21 @@
-import { Schema, model, Types } from "mongoose";
-//generar modelo de carrito
-const cartSchema = new Schema({
-    products:{
-        type: [
-            {
-                id_prod:{
-                    type: Schema.Types.ObjectId,
-                    ref: "products"
-                }, cant: Number
-            }
-        ],
-        default: []
-    }
-})
+import { Schema, model } from "mongoose";
 
-export default cartModel = model(cartSchema, "carts")
+// Generar modelo de carrito
+const cartSchema = new Schema({
+    products: {
+        type: [
+        {
+            id_prod: {
+            type: Schema.Types.ObjectId,
+            ref: "products",
+            },
+            cant: Number,
+        },
+        ],
+        default: [],
+    },
+});
+
+const CartModel = model("Cart", cartSchema); // Nombre del modelo: "Cart"
+
+export default CartModel; // Exportar el modelo correctamente

@@ -7,7 +7,8 @@ import { engine } from "express-handlebars";
 import multer from "multer";
 import * as path from "path";
 import { Server } from "socket.io";
-
+import cartRouter from "./routes/cart.routes.js";
+import productRouter from "./routes/product.routes.js";
 //*routes
 
 const app = express();
@@ -29,8 +30,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const upload = multer({ storage: storage });
 
-//*ServerIO
+//*Conectar a la base de datos a traves mongoDB de mongoose
+mongoose
+  .connect(process.env.URL_MONGODB_ATLAS)
+  .then(() => console.log("DB is connected"))
+  .catch((error) => console.log("Error en MongoDB Atlas :", error));
 
+const server = app.listen(process.env.PORT, () => {
+  console.log("Server on port", process.env.PORT);
+});
+//*ServerIO
 const io = new Server(server, { cors: { origin: "*" } });
 
 io.on("connection", (socket) => {
@@ -53,12 +62,14 @@ app.post("/api/upload", upload.single("product"), (req, res) => {
   res.send("Imagen subida");
 });
 
-//CONECTAR CON LA BASE DE DATOS a traves de mongoose
-mongoose
-  .connect(process.env.URL_MONGODB_ATLAS)
-  .then(() => console.log("DB is connected"))
-  .catch((err) => console.log("Error en MongoDB Atlas: ", err));
-
-app.listen(process.env.PORT, () => {
-  console.log("Server on port", process.env.PORT);
+//*HBS
+app.get("/api", (req, res) => {
+  res.render("index");
 });
+
+// await messageModel.create([
+//   {
+//     user: "mat@mati.com",
+//     message: "tasregay",
+//   },
+// ]);
