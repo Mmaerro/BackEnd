@@ -1,17 +1,28 @@
 <h2>Chat con Socket.io</h2>
 
-<div>
-  <input type="text" id="chatBox" />
-  <button id="botonChat">Enviar</button>
+<form id="chat">
+  <label for="emailUser">Email</label>
+  <input type="email" name="emailUser" required />
+  <label for="message">Mensaje</label>
+  <input type="text" name="message" required />
+  <button type="submit">Crear Producto</button>
+</form>
+<div id="mesageError" style="display: none; color: red;">Por favor, completa
+  todos los campos</div>
+
+<div id="sss">
+  {{#each mensajes}}
+    <div class="mensaje">
+      <p><b>{{user}}</b></p>
+      <p>{{message}}</p>
+      <button class="btnEliminar" value="{{_id}}">Eliminar</button>
+    </div>
+  {{/each}}
 </div>
-<div>
-  <p id="parrafosMensajes"></p>
-</div>
-{{#if message}}
-  {{message}}
-{{else}}
-  No hay mensaje disponible
-{{/if}}
-{{#each mensage}}
-  <p>{{this}}</p>
-{{/each}}
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.min.js"
+  integrity="sha512-AI5A3zIoeRSEEX9z3Vyir8NqSMC1pY7r5h2cE+9J6FLsoEmSSGLFaqMQw8SWvoONXogkfFrkQiJfLeHLz3+HOg=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+<script src="js/chat.js"></script>

@@ -1,6 +1,5 @@
 const socket = io();
 
-//* Listado de productos en tiempo real
 const formProduct = document.getElementById("formProducto");
 const listar = document.getElementById("listar");
 const error = document.getElementById("error");
@@ -21,7 +20,7 @@ formProduct.addEventListener("submit", (e) => {
     error.style.display = "block";
     setInterval(function () {
       error.style.display = "none";
-    }, 2000);
+    }, 3000);
   }
 });
 function validarForm(form) {
@@ -33,52 +32,37 @@ function validarForm(form) {
     }
   }
 }
+
+const forms = document.querySelectorAll(".form");
+
+for (let i = 0; i < forms.length; i++) {
+  forms[i].addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const hiddenInput = forms[i].querySelector(
+      "input[type='text'][style='display: none;']"
+    ); // Obtén el campo de entrada oculto
+    const id = hiddenInput.value; // Obtén el valor del campo de entrada
+    console.log(id);
+    socket.emit("EliminarProds", id);
+    e.target.remove();
+  });
+}
+
 socket.on("listado", (arrayProds) => {
-  console.log(arrayProds);
   listar.innerHTML = ""; //Para evitar duplicados
   arrayProds.forEach((prods) => {
-    console.log(prods.title);
-    listar.innerHTML += `<dl>
+    listar.innerHTML += `
+    <form class="form">
+    <dl>
     <dt><b>${prods.title}</b></dt>
     <dd><b>Descripcion:</b> ${prods.description}</dd>
     <dd><b>Precio:</b> ${prods.price}</dd>
     <dd><b>Stock:</b> ${prods.stock}</dd>
     <dd><b>Category:</b> ${prods.category}</dd>
-  </dl>`;
+  </dl>
+  <input type="text" value="${this.id}" style="display: none;" />
+  <input type="submit" value="Eliminar" />
+</form>`;
   });
 });
-
-// //*Chat
-
-// const botonChat = document.getElementById("botonChat");
-// const parrafosMensajes = document.getElementById("parrafosMensajes");
-// const val = document.getElementById("chatBox");
-// let user;
-
-// Swal.fire({
-//   title: "Identificacion de Usuario",
-//   text: "Por favor ingrese su nombre de usuario",
-//   input: "text",
-//   inputValidator: (valor) => {
-//     return !valor && "Ingrese un valor valido";
-//   },
-//   allowOutsideClick: false,
-// }).then((resultado) => {
-//   user = resultado.value;
-//   console.log(user);
-// });
-
-// botonChat.addEventListener("click", () => {
-//   if (val.value.trim().length > 0) {
-//     //Consultar si el input no esta vacio
-//     socket.emit("mensaje", { usuario: user, mensaje: val.value });
-//     val.value = "";
-//   }
-// });
-
-// socket.on("mensajes", (arrayMensajes) => {
-//   parrafosMensajes.innerHTML = ""; //Para evitar duplicados
-//   arrayMensajes.forEach((mensaje) => {
-//     parrafosMensajes.innerHTML += `<p>${mensaje.usuario} : ${mensaje.mensaje}</p>`;
-//   });
-// });
