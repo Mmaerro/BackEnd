@@ -10,16 +10,15 @@ viewsRouter.get("/realtimeproducts", async (req, res) => {
   req.io.on("connection", async (socket) => {
     console.log("Cliente desde View");
     socket.on("nuevoProducto", async (prods) => {
-      await productModel.create([
-        {
-          title: prods.title,
-          description: prods.description,
-          category: prods.category,
-          price: prods.price,
-          stock: prods.stock,
-          code: "que pongo aca?",
-        },
-      ]);
+      const newProduct = {
+        title: prods.title,
+        description: prods.description,
+        category: prods.category,
+        price: prods.price,
+        stock: prods.stock,
+        code: "que pongo aca?",
+      };
+      await productModel.create(newProduct);
       const productss = await productModel.find();
       req.io.emit("listado", productss);
     });
@@ -34,28 +33,35 @@ viewsRouter.get("/realtimeproducts", async (req, res) => {
 viewsRouter.get("/chat", async (req, res) => {
   const mensaje = await messageModel.find();
   const mensajeData = JSON.parse(JSON.stringify(mensaje));
+  mensajeData.reverse(); // Invierte el orden de los mensajes
+  const mensajesFormateados = mensajeData.map((mensaje) => {
+    const fechaCreacion = new Date(mensaje.createdAt);
+    const hora = fechaCreacion.getHours();
+    const minutos = fechaCreacion.getMinutes();
+    return { ...mensaje, hora, minutos };
+  });
+
   req.io.on("connection", async (socket) => {
     console.log("Cliente desde view");
     socket.on("newMessage", async (content) => {
-      console.log(content.emailUser);
+      console.log(content);
 
-      await messageModel.create([
-        {
-          user: content.emailUser,
-          message: content.message,
-        },
-      ]);
+      const newMessage = {
+        user: content.emailUser,
+        message: content.message,
+      };
 
+      await messageModel.create(newMessage);
       const mensajes = await messageModel.find();
-      const mensajeDatas = JSON.parse(JSON.stringify(mensajes));
+      //const mensajeDatas = JSON.parse(JSON.stringify(mensajes));
 
-      req.io.emit("messages", mensajeDatas);
+      req.io.emit("messages", mensajes);
     });
     socket.on("messageDelete", async (_id) => {
       await messageModel.findByIdAndRemove(_id);
     });
   });
-  res.render("chat", { mensajes: mensajeData });
+  res.render("chat", { mensajes: mensajesFormateados });
 });
 
 viewsRouter.get("/home", async (req, res) => {

@@ -61,7 +61,7 @@ socket.on("listado", (arrayProds) => {
     <dd><b>Stock:</b> ${prods.stock}</dd>
     <dd><b>Category:</b> ${prods.category}</dd>
   </dl>
-  <input type="text" value="${this.id}" style="display: none;" />
+  <input type="text" value="${prods.id}" style="display: none;" />
   <input type="submit" value="Eliminar" />
 </form>`;
   });

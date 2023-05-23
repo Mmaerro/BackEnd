@@ -8,7 +8,7 @@ const productRouter = Router(); //productRouter va a ser la implementacion de ro
 
 productRouter.get("/", async (req, res) => {
   let { limit } = req.query;
-  const products = await productManager.getProducts();
+  const products = await productModel.find();
   if (!limit) return res.send(JSON.stringify(products));
   res.send(JSON.stringify(products.slice(0, limit)));
 });
