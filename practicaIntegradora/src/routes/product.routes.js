@@ -7,14 +7,14 @@ const productManager = new ProductManager("./productos.txt");
 const productRouter = Router(); //productRouter va a ser la implementacion de router
 
 productRouter.get("/", async (req, res) => {
-  let { limit } = req.query;
+  let { limit, page, sort, query } = req.query;
   const products = await productModel.find();
   if (!limit) return res.send(JSON.stringify(products));
   res.send(JSON.stringify(products.slice(0, limit)));
 });
 
 productRouter.get("/:id", async (req, res) => {
-  const product = await productManager.getProductById(req.params.id);
+  const product = await productModel.findById(req.params.id);
   // res.send(product);
   res.render("product", {
     title: product.title,

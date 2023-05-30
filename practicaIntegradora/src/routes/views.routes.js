@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { messageModel } from "../models/Messages.js";
 import { productModel } from "../models/Products.js";
+import multer from "multer";
+import * as path from "path";
 
 const viewsRouter = Router();
 
@@ -71,6 +73,44 @@ viewsRouter.get("/home", async (req, res) => {
   } catch (error) {
     res.send(error);
   }
+});
+viewsRouter.get("/user", async (req, res) => {
+  req.io.on("connection", (socket) => {
+    console.log("{cliente desde view}");
+    socket.on("createUser", async (userData) => {
+      const { email, nickname, photo } = userData;
+      console.log(userData.email);
+      // Procesar la imagen utilizando Multer
+      const storage = multer.diskStorage({
+        destination: (req, file, cb) => {
+          cb(null, "src/public/img");
+        },
+        filename: (req, file, cb) => {
+          cb(null, `${file.originalname}`);
+        },
+      });
+
+      const upload = multer({ storage: storage }).single("photo");
+
+      upload(req, res, async (err) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+
+        // Aquí puedes acceder a la imagen subida a través de req.file
+        const imageFilePath = req.file.path;
+
+        // Procesar los demás datos del usuario y guardarlos en la base de datos
+        // ...
+
+        // Emitir un evento para confirmar la creación del usuario
+        req.io.emit("userCreated", { message: "Usuario creado exitosamente" });
+      });
+    });
+  });
+
+  res.render("createUser");
 });
 
 export default viewsRouter;
