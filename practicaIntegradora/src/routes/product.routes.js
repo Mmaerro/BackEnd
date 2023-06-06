@@ -7,10 +7,33 @@ const productManager = new ProductManager("./productos.txt");
 const productRouter = Router(); //productRouter va a ser la implementacion de router
 
 productRouter.get("/", async (req, res) => {
-  let { limit, page, sort, query } = req.query;
-  const products = await productModel.find();
-  if (!limit) return res.send(JSON.stringify(products));
-  res.send(JSON.stringify(products.slice(0, limit)));
+  const limit = parseInt(req.query.limit) || 10;
+  const page = parseInt(req.query.page) || 1;
+  const sort = req.query.sort === "desc" ? -1 : 1;
+  const query = req.query.query || "";
+
+  const options = {
+    limit: limit,
+    page: page,
+    sort: { price: sort }, 
+  };
+
+  const queryOptions = {
+    category: { $regex: query, $options: "i" }, // Filtrar por categoría con expresión regular (insensible a mayúsculas y minúsculas)
+    stock: { $gt: 0 }, // Filtrar por stock mayor a 0
+  };
+  try {
+    //Filtrado //Configuracion de paginas
+    const products = await productModel.find();
+    if (!limit) return res.send(JSON.stringify(products));
+    const result = await productModel.paginate(queryOptions, options);
+    res.send(JSON.stringify(result));
+    console.log(result);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error retrieving products", error: error.message });
+  }
 });
 
 productRouter.get("/:id", async (req, res) => {

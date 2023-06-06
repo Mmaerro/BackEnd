@@ -1,0 +1,18 @@
+<div class="listarProds">
+  {{#each products}}
+    <div class="divProd">
+      <b>{{title}}</b>
+      <p>Descripcion: <b>{{description}}</b></p>
+      <p>Precio: <b>${{price}}</b></p>
+      <p>Stock: <b>{{stock}}</b></p>
+      <a href="detail/{{_id}}" id="verMas">ver mas +</a>
+    </div>
+  {{/each}}
+</div>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.min.js"
+  integrity="sha512-AI5A3zIoeRSEEX9z3Vyir8NqSMC1pY7r5h2cE+9J6FLsoEmSSGLFaqMQw8SWvoONXogkfFrkQiJfLeHLz3+HOg=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+<script src="js/prods.js"></script>

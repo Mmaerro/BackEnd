@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import paginate from "mongoose-paginate-v2";
 //generar modelo de carrito
 const productSchema = new Schema({
   title: {
@@ -31,5 +32,5 @@ const productSchema = new Schema({
   },
   thumbnail: [],
 });
-
+productSchema.plugin(paginate);
 export const productModel = model("products", productSchema);

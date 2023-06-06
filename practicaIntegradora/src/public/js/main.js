@@ -66,3 +66,11 @@ socket.on("listado", (arrayProds) => {
 </form>`;
   });
 });
+window.addEventListener("scroll", function () {
+  var nav = document.getElementById("navbar");
+  if (window.pageYOffset > 0) {
+    nav.classList.add("scroll");
+  } else {
+    nav.classList.remove("scroll");
+  }
+});

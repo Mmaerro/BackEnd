@@ -1,8 +1,7 @@
 import { Router } from "express";
 import { messageModel } from "../models/Messages.js";
 import { productModel } from "../models/Products.js";
-import multer from "multer";
-import * as path from "path";
+import mongoose from "mongoose";
 
 const viewsRouter = Router();
 
@@ -65,52 +64,58 @@ viewsRouter.get("/chat", async (req, res) => {
   });
   res.render("chat", { mensajes: mensajesFormateados });
 });
+viewsRouter.get("/products", async (req, res) => {
+  try {
+    const options = {
+      page: req.query.page || 1,
+      limit: req.query.limit || 10,
+    };
 
+    const { docs, totalPages, totalDocs } = await productModel.paginate(
+      {},
+      options
+    );
+
+    res.render("products", {
+      products: docs,
+      pageCount: totalPages,
+      itemCount: totalDocs,
+      currentPage: options.page,
+      pages: mongoose.paginate.getArrayPages(req)(3, totalPages, options.page),
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error al obtener los productos",
+      error: error.message,
+    });
+  }
+});
+viewsRouter.get("/prods", async (req, res) => {
+  try {
+    const products = await productModel.find();
+    const productData = JSON.parse(JSON.stringify(products));
+    res.render("products", { products: productData });
+  } catch (error) {
+    res.send(error);
+  }
+});
 viewsRouter.get("/home", async (req, res) => {
   try {
-    const products = await productManager.getProducts();
+    const products = await productModel.find();
     res.render("home", { products });
   } catch (error) {
     res.send(error);
   }
 });
-viewsRouter.get("/user", async (req, res) => {
-  req.io.on("connection", (socket) => {
-    console.log("{cliente desde view}");
-    socket.on("createUser", async (userData) => {
-      const { email, nickname, photo } = userData;
-      console.log(userData.email);
-      // Procesar la imagen utilizando Multer
-      const storage = multer.diskStorage({
-        destination: (req, file, cb) => {
-          cb(null, "src/public/img");
-        },
-        filename: (req, file, cb) => {
-          cb(null, `${file.originalname}`);
-        },
-      });
-
-      const upload = multer({ storage: storage }).single("photo");
-
-      upload(req, res, async (err) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-
-        // Aquí puedes acceder a la imagen subida a través de req.file
-        const imageFilePath = req.file.path;
-
-        // Procesar los demás datos del usuario y guardarlos en la base de datos
-        // ...
-
-        // Emitir un evento para confirmar la creación del usuario
-        req.io.emit("userCreated", { message: "Usuario creado exitosamente" });
-      });
-    });
-  });
-
-  res.render("createUser");
+viewsRouter.get("/detail/:pid", async (req, res) => {
+  const { pid } = req.params;
+  try {
+    const products = await productModel.findById(pid);
+    const productData = JSON.parse(JSON.stringify(products));
+    res.render("productDetail", { products: productData });
+  } catch (error) {
+    res.send(error);
+  }
 });
 
 export default viewsRouter;

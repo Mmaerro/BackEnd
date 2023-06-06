@@ -47,7 +47,7 @@ app.use((req, res, next) => {
 });
 
 //*Routes
-app.use("/api", express.static(__dirname + "/public"));
+app.use("/api/", express.static(__dirname + "/public"));
 app.use("/api/product", productRouter);
 app.use("/api/carts", cartRouter);
 app.use("/api/", viewsRouter);
@@ -67,5 +67,13 @@ app.get("/api", (req, res) => {
 //   {
 //     user: "mat@mati.com",
 //     message: "hola",
+//   },
+// ]);
+// import CartModel from "./models/Cart.js";
+
+// await CartModel.create([
+//   {
+//     id_prod: "646cfc8560ca3d35fd83e08d",
+//     cant: 3,
 //   },
 // ]);

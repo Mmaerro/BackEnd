@@ -1,5 +1,11 @@
+* {
+  padding: 0px;
+  box-sizing: border-box;
+}
 body {
   background: rgba(3, 151, 3, 0.541);
+  padding: 0px;
+  margin: 0px;
 }
 form {
   display: flex;
@@ -106,4 +112,74 @@ form input[type="submit"]:hover {
   right: 10px;
   color: #888;
   font-size: 13px;
+}
+
+.listarProds {
+  width: 100%;
+  height: auto;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(200px, 1fr));
+  grid-gap: 20px;
+  padding-top: 40px;
+}
+.divProd {
+  margin: 0 auto;
+  width: 70%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+nav {
+  margin: 0px;
+  position: sticky;
+  top: -10px;
+  height: 50px;
+  background-color: #f1f1f1;
+  width: 100%;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 100;
+  transition: height 0.3s;
+}
+
+nav.scroll {
+  height: 40px;
+}
+
+nav a {
+  text-decoration: none;
+  color: #333;
+  margin: 0 10px;
+  font-weight: bold;
+}
+.prodDetail {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.detailProd {
+  margin-bottom: 10px;
+}
+
+.detailProd b {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.detailProd p {
+  font-size: 14px;
+  margin-bottom: 3px;
+}
+
+.detailProd p b {
+  font-weight: bold;
+}
+
+.detailProd p:last-child {
+  margin-bottom: 0;
 }
