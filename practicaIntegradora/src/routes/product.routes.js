@@ -2,7 +2,6 @@ import { Router } from "express";
 import { ProductManager } from "../ProductManager.js";
 import { productModel } from "../models/Products.js";
 
-const productManager = new ProductManager("./productos.txt");
 
 const productRouter = Router(); //productRouter va a ser la implementacion de router
 
@@ -15,7 +14,7 @@ productRouter.get("/", async (req, res) => {
   const options = {
     limit: limit,
     page: page,
-    sort: { price: sort }, 
+    sort: { price: sort },
   };
 
   const queryOptions = {
@@ -39,13 +38,7 @@ productRouter.get("/", async (req, res) => {
 productRouter.get("/:id", async (req, res) => {
   const product = await productModel.findById(req.params.id);
   // res.send(product);
-  res.render("product", {
-    title: product.title,
-    description: product.description,
-    price: product.price,
-    code: product.code,
-    stock: product.stock,
-  });
+  res.render("product", { product });
 });
 
 productRouter.post("/", async (req, res) => {
@@ -59,21 +52,32 @@ productRouter.post("/", async (req, res) => {
     category,
     thumbnails,
   } = req.body;
-  await productManager.addProduct({
-    title,
-    description,
-    code,
-    price,
-    status,
-    stock,
-    category,
-    thumbnails,
-  });
-  res.send("Producto creado!");
+
+  try {
+    // Crear un nuevo documento de producto utilizando el modelo definido con Mongoose
+    const product = new productModel({
+      title,
+      description,
+      code,
+      price,
+      status,
+      stock,
+      category,
+      thumbnails,
+    });
+
+    // Guardar el producto en la base de datos
+    await product.save();
+
+    res.send("Producto creado!");
+  } catch (error) {
+    console.error("Error al crear el producto", error);
+    res.status(500).send("Ha ocurrido un error al crear el producto");
+  }
 });
 
 productRouter.put("/:id", async (req, res) => {
-  const id = req.params.id;
+  const productId = req.params.id;
   const {
     title,
     description,
@@ -84,22 +88,38 @@ productRouter.put("/:id", async (req, res) => {
     category,
     thumbnails,
   } = req.body;
-  const mensaje = await productManager.updateProduct(id, {
-    title,
-    description,
-    code,
-    price,
-    status,
-    stock,
-    category,
-    thumbnails,
-  });
-  res.send(mensaje);
+
+  try {
+    // Buscar el producto por su ID y actualizar sus campos
+    const updatedProduct = await productModel.findByIdAndUpdate(
+      productId,
+      {
+        title,
+        description,
+        code,
+        price,
+        status,
+        stock,
+        category,
+        thumbnails,
+      },
+      { new: true } // Devuelve el producto actualizado en la respuesta
+    );
+
+    if (updatedProduct) {
+      res.send("Producto actualizado!");
+    } else {
+      res.status(404).send("Producto no encontrado");
+    }
+  } catch (error) {
+    console.error("Error al actualizar el producto", error);
+    res.status(500).send("Ha ocurrido un error al actualizar el producto");
+  }
 });
 
 productRouter.delete("/:id", async (req, res) => {
   const id = req.params.id;
-  const mensaje = await productManager.deleteProduct(id);
+  const mensaje = await productModel.findByIdAndDelete(id);
   res.send(mensaje);
 });
 
