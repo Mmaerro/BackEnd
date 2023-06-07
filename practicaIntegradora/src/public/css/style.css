@@ -183,3 +183,33 @@ nav a {
 .detailProd p:last-child {
   margin-bottom: 0;
 }
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination a,
+.pagination span {
+  padding: 8px 12px;
+  margin: 0 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  color: #333;
+  text-decoration: none;
+}
+
+.pagination a:hover {
+  background-color: #f5f5f5;
+}
+
+.pagination span.current-page {
+  background-color: #ccc;
+  cursor: default;
+}
+
+.pagination span.disabled {
+  color: #888;
+  cursor: not-allowed;
+}

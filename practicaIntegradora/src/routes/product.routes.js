@@ -1,7 +1,5 @@
 import { Router } from "express";
-import { ProductManager } from "../ProductManager.js";
 import { productModel } from "../models/Products.js";
-
 
 const productRouter = Router(); //productRouter va a ser la implementacion de router
 

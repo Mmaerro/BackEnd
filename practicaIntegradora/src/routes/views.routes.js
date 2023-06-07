@@ -64,32 +64,32 @@ viewsRouter.get("/chat", async (req, res) => {
   });
   res.render("chat", { mensajes: mensajesFormateados });
 });
-viewsRouter.get("/products", async (req, res) => {
-  try {
-    const options = {
-      page: req.query.page || 1,
-      limit: req.query.limit || 10,
-    };
+// viewsRouter.get("/products", async (req, res) => {
+//   try {
+//     const options = {
+//       page: req.query.page || 1,
+//       limit: req.query.limit || 10,
+//     };
 
-    const { docs, totalPages, totalDocs } = await productModel.paginate(
-      {},
-      options
-    );
+//     const { docs, totalPages, totalDocs } = await productModel.paginate(
+//       {},
+//       options
+//     );
 
-    res.render("products", {
-      products: docs,
-      pageCount: totalPages,
-      itemCount: totalDocs,
-      currentPage: options.page,
-      pages: mongoose.paginate.getArrayPages(req)(3, totalPages, options.page),
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: "Error al obtener los productos",
-      error: error.message,
-    });
-  }
-});
+//     res.render("products", {
+//       products: docs,
+//       pageCount: totalPages,
+//       itemCount: totalDocs,
+//       currentPage: options.page,
+//       pages: mongoose.paginate.getArrayPages(req)(3, totalPages, options.page),
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       message: "Error al obtener los productos",
+//       error: error.message,
+//     });
+//   }
+// });
 viewsRouter.get("/prods", async (req, res) => {
   try {
     const products = await productModel.find();
@@ -115,6 +115,48 @@ viewsRouter.get("/detail/:pid", async (req, res) => {
     res.render("productDetail", { products: productData });
   } catch (error) {
     res.send(error);
+  }
+});
+
+viewsRouter.get("/products", async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 9;
+  try {
+    const {
+      docs,
+      total,
+      totalPages,
+      nextPage,
+      prevPage,
+      hasPrevPage,
+      hasNextPage,
+      page: currentPage,
+    } = await productModel.paginate({}, { page, limit });
+    const paginationPages = [];
+
+    for (let i = 1; i <= totalPages; i++) {
+      paginationPages.push({
+        page: i,
+        isCurrent: i === currentPage,
+      });
+    }
+    const productData = JSON.parse(JSON.stringify(docs));
+    console.log(hasPrevPage);
+    res.render("products", {
+      products: productData,
+      totalProducts: total,
+      totalPages,
+      hasPrevPage,
+      hasNextPage,
+      currentPage,
+      itemsPerPage: limit,
+      prevPage,
+      nextPage,
+      paginationPages,
+    });
+  } catch (error) {
+    console.error("Error al obtener los productos", error);
+    res.status(500).send("Ha ocurrido un error al obtener los productos");
   }
 });
 
