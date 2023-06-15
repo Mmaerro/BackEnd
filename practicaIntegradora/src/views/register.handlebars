@@ -1,0 +1,32 @@
+<div>
+  <h3>REGISTRARSE!</h3>
+  <form id="formRegister">
+    <label for="firstName">Nombre</label>
+    <input type="text" name="firstName" required />
+    <label for="lastName">Apellido</label>
+    <input type="text" name="lastName" required />
+    <label for="email">Email</label>
+    <input type="email" name="email" required />
+    <label for="age">Edad</label>
+    <input type="number" name="age" required />
+    <label for="password">Password</label>
+    <input
+      type="password"
+      name="password"
+      placeholder="10 caracteres maximo y 1 numero minimo"
+      required
+    />
+
+    <input type="submit" value="Registrarte!" />
+    <p>Ya estas registrado? <a href="/api/login"> Ingresa aqui!! </a></p>
+  </form>
+  <div id="error" style="display: none; color: red;">Por favor, completa todos
+    los campos</div>
+</div>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.min.js"
+  integrity="sha512-AI5A3zIoeRSEEX9z3Vyir8NqSMC1pY7r5h2cE+9J6FLsoEmSSGLFaqMQw8SWvoONXogkfFrkQiJfLeHLz3+HOg=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+<script src="js/register.js"></script>

@@ -36,7 +36,8 @@ cartRouter.put("/:cid/products/:pid", async (req, res) => {
 
     // Verificar si el producto ya existe en el carrito
     const existingProduct = cart.products.find(
-      (product) => product.id_prod.toString() === pid);
+      (product) => product.id_prod.toString() === pid
+    );
     if (existingProduct) {
       // El producto ya existe, actualizar la cantidad
       existingProduct.quantity = quantity;

@@ -1,13 +1,10 @@
 const socket = io();
-
 const formProduct = document.getElementById("formProducto");
 const listar = document.getElementById("listar");
 const error = document.getElementById("error");
-error.style.display = "none";
 
 formProduct.addEventListener("submit", (e) => {
   e.preventDefault();
-
   const prodsIterator = new FormData(e.target); //transforma un objeto html a un objeto iterator
 
   //transforma de un objeto iterator a un obketo simple {}

@@ -5,14 +5,11 @@
       <p>{{description}}</p>
       <p>Precio: {{price}}</p>
       <p>Categoría: {{category}}</p>
-      {{#if showAddToCartButton}}
-        <form action="/cart" method="post">
-          <input type="hidden" name="productId" value="{{_id}}" />
-          <button type="submit">Agregar al carrito</button>
-        </form>
-      {{else}}
-        <a href="/api/detail/{{_id}}">Ver detalles</a>
-      {{/if}}
+      <a href="/api/detail/{{_id}}">Ver detalles</a>
+      <form action="/cart/" method="post">
+        <input type="hidden" name="productId" value="{{_id}}" />
+        <button type="submit">Agregar al carrito</button>
+      </form>
     </div>
   {{/each}}
 </div>
@@ -41,10 +38,3 @@
     {{/if}}
   {{/if}}
 </div>
-<script
-  src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.min.js"
-  integrity="sha512-AI5A3zIoeRSEEX9z3Vyir8NqSMC1pY7r5h2cE+9J6FLsoEmSSGLFaqMQw8SWvoONXogkfFrkQiJfLeHLz3+HOg=="
-  crossorigin="anonymous"
-  referrerpolicy="no-referrer"
-></script>
-<script src="js/prods.js"></script>

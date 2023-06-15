@@ -9,16 +9,9 @@ import * as path from "path";
 import { Server } from "socket.io";
 import cartRouter from "./routes/cart.routes.js";
 import productRouter from "./routes/product.routes.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "src/public/img");
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${file.originalname}`);
-  },
-});
 
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
@@ -27,7 +20,16 @@ app.set("views", path.resolve(__dirname, "./views"));
 //*Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "src/public/img");
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${file.originalname}`);
+  },
+});
 const upload = multer({ storage: storage });
+app.use(cookieParser());
 
 //*Conectar a la base de datos mongoDB a traves de mongoose
 mongoose

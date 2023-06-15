@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { messageModel } from "../models/Messages.js";
 import { productModel } from "../models/Products.js";
-import mongoose from "mongoose";
+import { userModel } from "../models/Users.js";
 
 const viewsRouter = Router();
 
@@ -28,7 +28,7 @@ viewsRouter.get("/realtimeproducts", async (req, res) => {
     });
   });
 
-  res.render("realtimeproducts", { products: productData });
+  res.render("realTimeProducts", { products: productData });
 });
 
 viewsRouter.get("/chat", async (req, res) => {
@@ -45,8 +45,6 @@ viewsRouter.get("/chat", async (req, res) => {
   req.io.on("connection", async (socket) => {
     console.log("Cliente desde view");
     socket.on("newMessage", async (content) => {
-      console.log(content);
-
       const newMessage = {
         user: content.emailUser,
         message: content.message,
@@ -64,32 +62,7 @@ viewsRouter.get("/chat", async (req, res) => {
   });
   res.render("chat", { mensajes: mensajesFormateados });
 });
-// viewsRouter.get("/products", async (req, res) => {
-//   try {
-//     const options = {
-//       page: req.query.page || 1,
-//       limit: req.query.limit || 10,
-//     };
 
-//     const { docs, totalPages, totalDocs } = await productModel.paginate(
-//       {},
-//       options
-//     );
-
-//     res.render("products", {
-//       products: docs,
-//       pageCount: totalPages,
-//       itemCount: totalDocs,
-//       currentPage: options.page,
-//       pages: mongoose.paginate.getArrayPages(req)(3, totalPages, options.page),
-//     });
-//   } catch (error) {
-//     res.status(500).json({
-//       message: "Error al obtener los productos",
-//       error: error.message,
-//     });
-//   }
-// });
 viewsRouter.get("/prods", async (req, res) => {
   try {
     const products = await productModel.find();
@@ -141,7 +114,6 @@ viewsRouter.get("/products", async (req, res) => {
       });
     }
     const productData = JSON.parse(JSON.stringify(docs));
-    console.log(hasPrevPage);
     res.render("products", {
       products: productData,
       totalProducts: total,
@@ -159,5 +131,65 @@ viewsRouter.get("/products", async (req, res) => {
     res.status(500).send("Ha ocurrido un error al obtener los productos");
   }
 });
+viewsRouter.get("/register", async (req, res) => {
+  res.render("register");
+});
 
+viewsRouter.post("/register", async (req, res) => {
+  const { email, password, firstName, lastName, age } = req.body;
+  const newUsuario = {
+    first_name: firstName,
+    last_name: lastName,
+    email: email,
+    age: age,
+    rol: "user",
+    password: password,
+  };
+
+  const user = new userModel(newUsuario);
+  await user.save();
+
+  res.redirect("/login");
+});
+
+viewsRouter.get("/login", async (req, res) => {
+  res.render("login");
+});
+
+viewsRouter.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await userModel.findOne({ email: email });
+
+    if (!user) {
+      // Si el usuario no existe, muestra un mensaje de error o redirecciona a una página de error
+      return res.render("login", {
+        error: "Correo electrónico o contraseña incorrectos",
+      });
+    }
+
+    // Verificar la contraseña del usuario
+    const isPasswordValid = await user.comparePassword(password);
+
+    if (!isPasswordValid) {
+      // Si la contraseña no coincide, muestra un mensaje de error o redirecciona a una página de error
+      return res.render("login", {
+        error: "Correo electrónico o contraseña incorrectos",
+      });
+    }
+
+    // Si el correo electrónico y la contraseña son válidos, se puede iniciar sesión correctamente
+    // Puedes guardar la información de inicio de sesión en la sesión o generar un token de autenticación
+
+    // Redireccionar al usuario a la página deseada después del inicio de sesión exitoso
+    res.redirect("/products");
+  } catch (error) {
+    console.error("Error al iniciar sesión:", error);
+    res.status(500).send("Ha ocurrido un error al iniciar sesión");
+  }
+});
+viewsRouter.get("/carts/:cid", async (req, res) => {
+  
+});
 export default viewsRouter;
