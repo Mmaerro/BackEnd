@@ -2,6 +2,7 @@ import "dotenv/config";
 import express, { json } from "express";
 import mongoose from "mongoose";
 import viewsRouter from "./routes/views.routes.js";
+import usersRouter from "./routes/user.routes.js";
 import { __dirname, __filename } from "./path.js";
 import { engine } from "express-handlebars";
 import multer from "multer";
@@ -12,6 +13,7 @@ import productRouter from "./routes/product.routes.js";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import FileStore from "session-file-store";
+import mongoStore from "connect-mongo";
 
 const app = express();
 app.use(express.json());
@@ -51,22 +53,27 @@ app.use((req, res, next) => {
   return next();
 });
 
-const fileStore = FileStore(session);
+// sessions mongo
 app.use(
   session({
-    store: new fileStore({
-      path: __dirname + "/sessions",
+    store: new mongoStore({
+      mongoUrl: process.env.URL_MONGODB_ATLAS,
+      ttl: 60,
     }),
     secret: "sessionSecret",
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 60000 },
   })
 );
+
 //*Routes
 app.use("/api/", express.static(__dirname + "/public"));
 app.use("/api/product", productRouter);
 app.use("/api/carts", cartRouter);
 app.use("/api/", viewsRouter);
+app.use("/api/users", usersRouter);
+
 app.post("/api/upload", upload.single("product"), (req, res) => {
   //Imagenes
   console.log(req.body);

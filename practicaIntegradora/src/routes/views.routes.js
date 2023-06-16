@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { messageModel } from "../models/Messages.js";
 import { productModel } from "../models/Products.js";
-import { userModel } from "../models/Users.js";
 
 const viewsRouter = Router();
 
@@ -131,65 +130,83 @@ viewsRouter.get("/products", async (req, res) => {
     res.status(500).send("Ha ocurrido un error al obtener los productos");
   }
 });
-viewsRouter.get("/register", async (req, res) => {
-  res.render("register");
-});
+// viewsRouter.get("/register", async (req, res) => {
+//   res.render("register");
+// });
 
-viewsRouter.post("/register", async (req, res) => {
-  const { email, password, firstName, lastName, age } = req.body;
-  const newUsuario = {
-    first_name: firstName,
-    last_name: lastName,
-    email: email,
-    age: age,
-    rol: "user",
-    password: password,
-  };
+// viewsRouter.post("/register", async (req, res) => {
+//   const { email, password, firstName, lastName, age } = req.body;
+//   const newUsuario = {
+//     first_name: firstName,
+//     last_name: lastName,
+//     email: email,
+//     age: age,
+//     rol: "user",
+//     password: password,
+//   };
 
-  const user = new userModel(newUsuario);
-  await user.save();
+//   const user = new userModel(newUsuario);
+//   await user.save();
 
-  res.redirect("/login");
-});
+//   res.redirect("/login");
+// });
 
-viewsRouter.get("/login", async (req, res) => {
+// viewsRouter.get("/login", async (req, res) => {
+//   res.render("login");
+// });
+
+// viewsRouter.post("/login", async (req, res) => {
+//   const { email, password } = req.body;
+
+//   try {
+//     const user = await userModel.findOne({ email: email });
+
+//     if (!user) {
+//       // Si el usuario no existe, muestra un mensaje de error o redirecciona a una página de error
+//       return res.render("login", {
+//         error: "Correo electrónico o contraseña incorrectos",
+//       });
+//     }
+
+//     // Verificar la contraseña del usuario
+//     const isPasswordValid = await user.comparePassword(password);
+
+//     if (!isPasswordValid) {
+//       // Si la contraseña no coincide, muestra un mensaje de error o redirecciona a una página de error
+//       return res.render("login", {
+//         error: "Correo electrónico o contraseña incorrectos",
+//       });
+//     }
+
+//     // Si el correo electrónico y la contraseña son válidos, se puede iniciar sesión correctamente
+//     // Puedes guardar la información de inicio de sesión en la sesión o generar un token de autenticación
+
+//     // Redireccionar al usuario a la página deseada después del inicio de sesión exitoso
+//     res.redirect("/products");
+//   } catch (error) {
+//     console.error("Error al iniciar sesión:", error);
+//     res.status(500).send("Ha ocurrido un error al iniciar sesión");
+//   }
+// });
+
+viewsRouter.get("/", (req, res) => {
   res.render("login");
 });
 
-viewsRouter.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
-    const user = await userModel.findOne({ email: email });
-
-    if (!user) {
-      // Si el usuario no existe, muestra un mensaje de error o redirecciona a una página de error
-      return res.render("login", {
-        error: "Correo electrónico o contraseña incorrectos",
-      });
-    }
-
-    // Verificar la contraseña del usuario
-    const isPasswordValid = await user.comparePassword(password);
-
-    if (!isPasswordValid) {
-      // Si la contraseña no coincide, muestra un mensaje de error o redirecciona a una página de error
-      return res.render("login", {
-        error: "Correo electrónico o contraseña incorrectos",
-      });
-    }
-
-    // Si el correo electrónico y la contraseña son válidos, se puede iniciar sesión correctamente
-    // Puedes guardar la información de inicio de sesión en la sesión o generar un token de autenticación
-
-    // Redireccionar al usuario a la página deseada después del inicio de sesión exitoso
-    res.redirect("/products");
-  } catch (error) {
-    console.error("Error al iniciar sesión:", error);
-    res.status(500).send("Ha ocurrido un error al iniciar sesión");
-  }
+viewsRouter.get("/signup", (req, res) => {
+  res.render("signup");
 });
-viewsRouter.get("/carts/:cid", async (req, res) => {
-  
+
+viewsRouter.get("/errorLogin", (req, res) => {
+  res.render("errorLogin");
+});
+
+viewsRouter.get("/errorSignup", (req, res) => {
+  res.render("errorSignup");
+});
+
+viewsRouter.get("/profile", (req, res) => {
+  console.log(req);
+  res.render("profile");
 });
 export default viewsRouter;

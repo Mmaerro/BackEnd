@@ -3,7 +3,7 @@
   {{#if error}}
     <p>{{error}}</p>
   {{/if}}
-  <form action="/api/login" method="POST">
+  <form action="/api/users/login" method="POST">
     <div>
       <label for="email">Correo electrónico:</label>
       <input type="email" id="email" name="email" required />
@@ -12,6 +12,8 @@
       <label for="password">Contraseña:</label>
       <input type="password" id="password" name="password" required />
     </div>
-    <button type="submit">Iniciar sesión</button>
+    <input type="submit" value="LOGIN" />
   </form>
 </div>
+<h2>New user</h2>
+<button onclick="location.href='/api/signup'">SIGNUP</button>
