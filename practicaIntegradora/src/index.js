@@ -10,16 +10,20 @@ import { Server } from "socket.io";
 import cartRouter from "./routes/cart.routes.js";
 import productRouter from "./routes/product.routes.js";
 import cookieParser from "cookie-parser";
+import session from "express-session";
+import FileStore from "session-file-store";
 
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
 app.set("views", path.resolve(__dirname, "./views"));
 
 //*Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "src/public/img");
@@ -29,7 +33,6 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage: storage });
-app.use(cookieParser());
 
 //*Conectar a la base de datos mongoDB a traves de mongoose
 mongoose
@@ -48,6 +51,17 @@ app.use((req, res, next) => {
   return next();
 });
 
+const fileStore = FileStore(session);
+app.use(
+  session({
+    store: new fileStore({
+      path: __dirname + "/sessions",
+    }),
+    secret: "sessionSecret",
+    resave: true,
+    saveUninitialized: true,
+  })
+);
 //*Routes
 app.use("/api/", express.static(__dirname + "/public"));
 app.use("/api/product", productRouter);
