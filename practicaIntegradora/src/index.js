@@ -1,6 +1,6 @@
+import "./persistencia/dbConfig.js";
 import "dotenv/config";
 import express, { json } from "express";
-import mongoose from "mongoose";
 import viewsRouter from "./routes/views.routes.js";
 import usersRouter from "./routes/user.routes.js";
 import { __dirname, __filename } from "./path.js";
@@ -12,8 +12,9 @@ import cartRouter from "./routes/cart.routes.js";
 import productRouter from "./routes/product.routes.js";
 import cookieParser from "cookie-parser";
 import session from "express-session";
-import FileStore from "session-file-store";
 import mongoStore from "connect-mongo";
+import passport from "passport";
+import "./passportStrategies.js";
 
 const app = express();
 app.use(express.json());
@@ -23,35 +24,6 @@ app.use(cookieParser());
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
 app.set("views", path.resolve(__dirname, "./views"));
-
-//*Middleware
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "src/public/img");
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${file.originalname}`);
-  },
-});
-const upload = multer({ storage: storage });
-
-//*Conectar a la base de datos mongoDB a traves de mongoose
-mongoose
-  .connect(process.env.URL_MONGODB_ATLAS)
-  .then(() => console.log("DB is connected"))
-  .catch((error) => console.log("Error en MongoDB Atlas :", error));
-
-const server = app.listen(process.env.PORT, () => {
-  console.log("Server on port", process.env.PORT);
-});
-//*ServerIO
-const io = new Server(server, { cors: { origin: "*" } });
-
-app.use((req, res, next) => {
-  req.io = io;
-  return next();
-});
 
 // sessions mongo
 app.use(
@@ -66,6 +38,35 @@ app.use(
     cookie: { maxAge: 60000 },
   })
 );
+//passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+//*Middleware
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "src/public/img");
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${file.originalname}`);
+  },
+});
+const upload = multer({ storage: storage });
+
+//*Conectar a la base de datos mongoDB a traves de mongoose
+
+const server = app.listen(process.env.PORT, () => {
+  console.log("Server on port", process.env.PORT);
+});
+
+//*ServerIO
+const io = new Server(server, { cors: { origin: "*" } });
+
+app.use((req, res, next) => {
+  req.io = io;
+  return next();
+});
 
 //*Routes
 app.use("/api/", express.static(__dirname + "/public"));

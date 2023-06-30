@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { messageModel } from "../models/Messages.js";
-import { productModel } from "../models/Products.js";
+import { messageModel } from "../persistencia/models/Messages.js";
+import { productModel } from "../persistencia/models/Products.js";
 
 const viewsRouter = Router();
 
@@ -206,7 +206,7 @@ viewsRouter.get("/errorSignup", (req, res) => {
 });
 
 viewsRouter.get("/profile", (req, res) => {
-  console.log(req);
-  res.render("profile");
+  const { first_name } = req.session.user;
+  res.render("profile", { first_name });
 });
 export default viewsRouter;

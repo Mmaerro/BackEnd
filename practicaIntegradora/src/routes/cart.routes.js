@@ -1,8 +1,8 @@
 import { Router } from "express";
 import mongoose from "mongoose";
 import { CartManager } from "../CartManager.js";
-import cartModel from "../models/Cart.js";
-import { productModel } from "../models/Products.js";
+import cartModel from "../persistencia/models/Cart.js";
+import { productModel } from "../persistencia/models/Products.js";
 
 const cartManager = new CartManager("./cart.txt");
 

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { productModel } from "../models/Products.js";
+import { productModel } from "../persistencia/models/Products.js";
 
 const productRouter = Router(); //productRouter va a ser la implementacion de router
 
