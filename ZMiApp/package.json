@@ -1,0 +1,17 @@
+{
+  "name": "zmiapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm-run-all --parallel start:backend start:frontend",
+    "start:backend": "node backend/src/server.js",
+    "start:frontend": "cd front && npm start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  }
+}

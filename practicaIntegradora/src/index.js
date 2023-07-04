@@ -54,7 +54,6 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-//*Conectar a la base de datos mongoDB a traves de mongoose
 
 const server = app.listen(process.env.PORT, () => {
   console.log("Server on port", process.env.PORT);

@@ -1,0 +1,10 @@
+.main-container {
+  padding: 100px;
+
+  margin: 0 auto;
+  width: 80%;
+  height: max-content;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+}
